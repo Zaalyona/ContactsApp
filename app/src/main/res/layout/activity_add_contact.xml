@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+    
+    <EditText
+        android:id="@+id/etNameAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:focusable="true"
+        android:inputType="textCapWords"
+        android:nextFocusDown="@id/etSurnameAdd"
+        android:hint="Имя"/>
+
+    <EditText
+        android:id="@+id/etSurnameAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="textCapWords"
+        android:nextFocusDown="@id/etNumberAdd"
+        android:hint="Фамилия"/>
+
+    <EditText
+        android:id="@+id/etNumberAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="phone"
+        android:nextFocusDown="@id/btnSaveAdd"
+        android:hint="Номер телефона"/>
+
+    <Button
+        android:id="@+id/btnSaveAdd"
+        android:layout_marginHorizontal="64dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сохранить контакт"/>
+
+</LinearLayout>
