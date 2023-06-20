@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.createObject
+import io.realm.kotlin.deleteFromRealm
 import java.util.UUID
 
 class MainViewModel : ViewModel() {
@@ -41,16 +42,6 @@ class MainViewModel : ViewModel() {
         newContactSurname: String,
         newContactNumber: String) {
 
-        /*realm.executeTransaction {
-            val model = it.<Contact>(UUID.randomUUID().toString()).apply {
-                this.name = name
-                this.surname = surname
-                this.number = number
-            }
-
-            it.copyToRealmOrUpdate(model)
-        }*/
-
         val contact = realm.where(Contact::class.java)
             .equalTo("id", contactId)
             .findFirst()
@@ -60,6 +51,16 @@ class MainViewModel : ViewModel() {
             contact?.surname = newContactSurname
             contact?.number = newContactNumber
             realm.insertOrUpdate(contact)
+        }
+    }
+
+    fun deleteContact(contactId: String) {
+        val contact = realm.where(Contact::class.java)
+            .equalTo("id", contactId)
+            .findFirst()
+
+        realm.executeTransaction {
+            contact!!.deleteFromRealm()
         }
     }
 }

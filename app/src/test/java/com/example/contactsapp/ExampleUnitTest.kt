@@ -30,5 +30,17 @@ class ExampleUnitTest {
 
         assertEquals(contact, lastContact)
 
+        contactRepo.editContact(contact.name, contact.surname, contact.number, "89099099090")
+
+        val editContact = FakeContact(
+            name = name,
+            surname = surname,
+            number = "89099099090"
+        )
+
+        assertEquals(contact, editContact)
+
+        contactRepo.deleteContact(contact)
+        assertEquals(list.size, 0)
     }
 }

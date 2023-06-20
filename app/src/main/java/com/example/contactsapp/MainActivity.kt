@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
 
             if (adapter.contactNameSelected != "" && adapter.contactSurnameSelected != "") {
 
-                //нужно ли использовать интент, если я могу получить эти переменные из адаптера?
                 val intent = Intent(this@MainActivity, EditContactActivity::class.java)
 
                 intent.putExtra("contactId", adapter.contactIdSelected)
@@ -54,6 +53,18 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(
                     applicationContext,
                     "Для редактирования выберите нужный контакт",
+                    Toast.LENGTH_SHORT)
+            }
+        }
+
+        binding.fabDeleteContact.setOnClickListener {
+            if (adapter.contactNameSelected != "") {
+                viewModel.deleteContact(adapter.contactIdSelected)
+                finish()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Для удаления выберите нужный контакт",
                     Toast.LENGTH_SHORT)
             }
         }

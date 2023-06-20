@@ -11,4 +11,16 @@ class ContactRepo() {
     fun getAllContacts(): MutableList<FakeContact> {
         return contactList
     }
+
+    fun editContact(
+        contactName: String,
+        contactSurname: String,
+        contactNumber: String,
+        newContactNumber: String) {
+        contactList.find { it.name == contactName }?.number = newContactNumber
+    }
+
+    fun deleteContact(contact: FakeContact) {
+        contactList.remove(contact)
+    }
 }
