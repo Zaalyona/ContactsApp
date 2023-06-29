@@ -1,24 +1,45 @@
 package com.example.contactsapp
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
+import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.example.contactsapp.databinding.ActivityMainBinding
-import com.example.contactsapp.ext.focusAndShowKeyboard
 import com.example.contactsapp.ext.hideKeyboard
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val defaultLifecycleObserver = object : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            super.onCreate(owner)
+            Log.d("Main", "DefaultLifecycleObserver - onCreate")
+        }
+
+        override fun onStart(owner: LifecycleOwner) {
+            super.onStart(owner)
+            Log.d("Main", "DefaultLifecycleObserver - onStart")
+        }
+
+        override fun onResume(owner: LifecycleOwner) {
+            super.onResume(owner)
+            Log.d("Main", "DefaultLifecycleObserver - onResume")
+        }
+    }
+
+    private val viewModel : MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        lifecycle.addObserver(defaultLifecycleObserver)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -58,6 +79,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.fabDeleteContact.setOnClickListener {
+            if (adapter.contactNameSelected != "") {
+                viewModel.deleteContact(adapter.contactIdSelected)
+                finish()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "Для удаления выберите нужный контакт",
+                    Toast.LENGTH_SHORT)
+            }
+        }
+
         //Работа с полем ввода типа "Пароль", открытие и закрытие видимости текста,
         // смена иконки с глазом
         /*binding.ivEye.setOnClickListener {
@@ -72,5 +105,10 @@ class MainActivity : AppCompatActivity() {
                 etSoftInput.setSelection(binding.etSoftInput.length())
             }
         }*/
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycle.removeObserver(defaultLifecycleObserver)
     }
 }

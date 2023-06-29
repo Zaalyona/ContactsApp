@@ -7,30 +7,22 @@ import androidx.lifecycle.ViewModel
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.createObject
+import io.realm.kotlin.deleteFromRealm
 import java.util.UUID
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val contactRepository: ContactRepository) : ViewModel() {
 
-    private val realm: Realm = Realm.getDefaultInstance()
-    val allContacts: LiveData<List<Contact>>
-        get() = getAllContacts()
+    val allContacts: ContactLiveData
+        get() = getAllContacts() as ContactLiveData
 
     fun addContact(name: String, surname: String, number: String) {
-        realm.executeTransaction {
-            val model = it.createObject<Contact>(UUID.randomUUID().toString()).apply {
-                this.name = name
-                this.surname = surname
-                this.number = number
-            }
 
-            it.insertOrUpdate(model)
-        }
+        contactRepository.addContact(name, surname, number)
     }
 
     private fun getAllContacts(): MutableLiveData<List<Contact>> {
-        val list = MutableLiveData<List<Contact>>()
-
-        val allContacts = realm.where(Contact::class.java).findAll()
+        val list = ContactLiveData()
+        val allContacts = contactRepository.getContact()
         list.value = allContacts.subList(0, allContacts.size)
         return list
     }
@@ -41,25 +33,21 @@ class MainViewModel : ViewModel() {
         newContactSurname: String,
         newContactNumber: String) {
 
-        /*realm.executeTransaction {
-            val model = it.<Contact>(UUID.randomUUID().toString()).apply {
-                this.name = name
-                this.surname = surname
-                this.number = number
-            }
+        contactRepository.editContact(
+            contactId = contactId,
+            newContactName = newContactName,
+            newContactSurname = newContactSurname,
+            newContactNumber = newContactNumber
+        )
+    }
 
-            it.copyToRealmOrUpdate(model)
-        }*/
+    fun deleteContact(contactId: String) {
 
-        val contact = realm.where(Contact::class.java)
-            .equalTo("id", contactId)
-            .findFirst()
+        contactRepository.deleteContact(contactId = contactId)
+    }
 
-        realm.executeTransaction {
-            contact?.name = newContactName
-            contact?.surname = newContactSurname
-            contact?.number = newContactNumber
-            realm.insertOrUpdate(contact)
-        }
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("MainViewModel", "MainViewModel -> onCleared")
     }
 }

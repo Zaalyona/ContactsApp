@@ -4,18 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.contactsapp.databinding.ActivityEditContactBinding
 import com.example.contactsapp.ext.focusAndShowKeyboard
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EditContactActivity : AppCompatActivity()  {
+
+    private val viewModel : MainViewModel by viewModel()
 
     private lateinit var binding: ActivityEditContactBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         binding = ActivityEditContactBinding.inflate(layoutInflater)
         setContentView(binding.root)

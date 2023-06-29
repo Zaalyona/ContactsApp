@@ -1,24 +1,18 @@
 package com.example.contactsapp
 
 import android.app.Application
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import com.example.contactsapp.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-        Realm.init(this)
-
-        val configuration = RealmConfiguration.Builder()
-            .name("todo.db")
-            .deleteRealmIfMigrationNeeded()
-            .schemaVersion(0)
-            .allowWritesOnUiThread(true)
-            .allowQueriesOnUiThread(true)
-            .build()
-
-        Realm.setDefaultConfiguration(configuration)
+        startKoin {
+            androidContext(this@App)
+            modules(appModule)
+        }
     }
 }
